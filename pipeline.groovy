@@ -25,15 +25,19 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                bat "java -jar ./target/demo-0.0.1-SNAPSHOT.war"
+                bat "start java -jar ./target/demo-0.0.1-SNAPSHOT.war"
+            }
+        }
+        stage('Waiting for deploy') {
+            steps {
+                echo 'Sleeping....'
+                bat "ping -n 30 127.0.0.1"
             }
         }
         stage('Smoke') {
             steps {
                 echo 'Smoke....'
-
-                def status = bat(script: "curl http://localhost:8081/hello", returnStdout: true)
-                echo "$status"
+                bat "curl http://localhost:8081/hello"
             }
         }
     }
