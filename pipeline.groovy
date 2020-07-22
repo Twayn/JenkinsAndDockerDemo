@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                echo 'Build..'
                 git branch: 'master',
                         credentialsId: 'b42b8605-6d70-4b2d-8101-ace7e3362763',
                         url: 'https://github.com/Twayn/JenkinsDemo.git'
@@ -14,6 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
+                bat "./mvnw test"
             }
         }
         stage('Deploy') {
