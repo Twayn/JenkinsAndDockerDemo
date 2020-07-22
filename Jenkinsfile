@@ -6,8 +6,8 @@ pipeline {
             steps {
                 echo 'Checkout..'
                 git branch: 'master',
-                        credentialsId: 'b42b8605-6d70-4b2d-8101-ace7e3362763',
-                        url: 'https://github.com/Twayn/JenkinsDemo.git'
+                    credentialsId: 'b42b8605-6d70-4b2d-8101-ace7e3362763',
+                    url: 'https://github.com/Twayn/JenkinsDemo.git'
             }
         }
         stage('Build') {
@@ -31,7 +31,7 @@ pipeline {
         stage('Waiting for deploy') {
             steps {
                 echo 'Sleeping....'
-                bat "ping -n 30 127.0.0.1"
+                bat "ping -n 15 127.0.0.1"
             }
         }
         stage('Smoke') {
