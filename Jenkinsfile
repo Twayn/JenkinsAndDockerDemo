@@ -37,7 +37,7 @@ pipeline {
         stage('Smoke') {
             steps {
                 echo 'Smoke....'
-                bat "curl http://localhost:8081/hello"
+                bat "curl http://localhost:8081/demo"
             }
         }
     }

@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout from SCM') {
+            steps {
+                echo 'Checkout..'
+                git branch: 'master',
+                    credentialsId: 'b42b8605-6d70-4b2d-8101-ace7e3362763',
+                    url: 'https://github.com/Twayn/JenkinsDemo.git'
+            }
+        }
+        stage('Java build') {
+            steps {
+                echo 'Java build..'
+                bat "./mvnw package -Dmaven.test.skip=true"
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                bat "./mvnw test"
+            }
+        }
+        stage('Docker build') {
+            steps {
+                echo 'Docker building...'
+                bat "docker build -t demo ."
+            }
+        }
+        stage('Docker stop previous') {
+            steps {
+                echo 'Docker stopping previous...'
+                bat "docker stop demo"
+            }
+        }
+        stage('Docker remove previous') {
+            steps {
+                echo 'Docker removing previous...'
+                bat "docker rm demo"
+            }
+        }
+        stage('Docker deploy') {
+            steps {
+                echo 'Docker deploying....'
+                bat "docker run -dp 8081:8081 --name demo demo"
+            }
+        }
+        stage('Waiting for Docker deploy') {
+            steps {
+                echo 'Waiting....'
+                bat "ping -n 20 127.0.0.1"
+            }
+        }
+        stage('Smoke') {
+            steps {
+                echo 'Smoke....'
+                bat "curl http://localhost:8081/demo"
+            }
+        }
+    }
+}
